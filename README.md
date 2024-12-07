@@ -125,8 +125,8 @@ on:
     context: .
     push: true
     tags: |
-      ${{ secrets.DOCKERHUB_USERNAME }}/your-image:latest
-      ${{ secrets.DOCKERHUB_USERNAME }}/your-image:v${{ needs.version.outputs.new_version }}
+      ${{ secrets.DOCKERHUB_USERNAME }}/semantic-versioning:latest
+      ${{ secrets.DOCKERHUB_USERNAME }}/semantic-versioning:v${{ needs.version.outputs.new_version }}
 ```
 
 ArgoCD 배포를 위해 values.yaml 파일에 버전을 지정하는 예시\
@@ -137,13 +137,13 @@ ArgoCD 배포를 위해 values.yaml 파일에 버전을 지정하는 예시\
 
 - name: Update Version in values.yaml
   run: |
-    cd argocd-config/apps/your-app
+    cd deploy
     # yq를 사용하여 values.yaml 업데이트
     yq eval ".image.tag = \"v${{ needs.version.outputs.new_version }}\"" -i values.yaml
 
 - name: Commit and Push Changes
   run: |
-    cd argocd-config
+    cd deploy
     git config --global user.name 'github-actions[bot]'
     git config --global user.email 'github-actions[bot]@users.noreply.github.com'
     git add .
@@ -153,7 +153,9 @@ ArgoCD 배포를 위해 values.yaml 파일에 버전을 지정하는 예시\
 
 5. Git Tag 업데이트
 
-업데이트 된 태그를 Repository에 반영합니다. 
+업데이트 된 태그를 Repository에 반영합니다. 이를 위해선 Actions에 권한을 부여해줘야 합니다.
+
+Settings -> Actions -> General -> Read and write permissions -> 체크
 
 ```yaml
 - name: Create Git tag
@@ -173,3 +175,4 @@ ArgoCD 배포를 위해 values.yaml 파일에 버전을 지정하는 예시\
 4. 시간 절약: 반복적인 버전 관리 작업을 자동화하여 개발자가 더 중요한 작업에 집중할 수 있습니다.
 
 위 예시를 참고하여 프로젝트에 맞게 수정하여 사용하면 좋겠습니다~! 해당 코드는 https://github.com/Ssuwani/semantic-versioning 에 있습니다. 
+
