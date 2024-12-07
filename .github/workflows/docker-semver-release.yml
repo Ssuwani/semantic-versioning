@@ -84,8 +84,8 @@ jobs:
         context: .
         push: true
         tags: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/your-image:latest
-          ${{ secrets.DOCKERHUB_USERNAME }}/your-image:v${{ needs.version.outputs.new_version }}
+          ${{ secrets.DOCKERHUB_USERNAME }}/semantic-versioning:latest
+          ${{ secrets.DOCKERHUB_USERNAME }}/semantic-versioning:v${{ needs.version.outputs.new_version }}
 
     - name: Update Version in values.yaml
       run: |
@@ -95,7 +95,7 @@ jobs:
 
     - name: Commit and Push Changes
       run: |
-        cd argocd-config
+        cd deploy
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         git add .
